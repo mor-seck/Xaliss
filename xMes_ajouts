@@ -1,0 +1,25 @@
+//Pour ajouter un admin partenaire
+{
+"username":"admin",
+"password":"admin",
+"prenom":"Pape",
+"nom":"SECK",
+"adresse":"pikine",
+"telephone":"77 328 03 48 ",
+"email":"morseck00@gmail.com",
+"raisonSociale":"1525GDKD",
+"ninea":"452545559587",
+"statut":"actif"
+}
+
+//Pour ajouter un user partenaire
+{
+"username":"admin",
+"password":"admin",
+"prenom":"Pape",
+"nom":"SECK",
+"adresse":"pikine",
+"telephone":"77 328 03 48 ",
+"email":"morseck00@gmail.com",
+"raisonSociale":"1525GDKD",
+}
