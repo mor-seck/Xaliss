@@ -3,7 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
@@ -19,39 +23,66 @@ class Partenaire
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity="App\Entity\Utilisateur", mappedBy="partenaire")
      */
-    private $raisonSociale;
+    private $utilisateurs;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      */
     private $ninea;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      */
-    private $statut;
+    private $raisonSociale;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur", inversedBy="partenaires")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaire")
      */
-    private $utilisateur;
+    private $comptes;
 
+    public function __construct()
+    {
+        $this->utilisateurs = new ArrayCollection();
+        $this->comptes = new ArrayCollection();
+    }
+
+    
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getRaisonSociale(): ?string
+    /**
+     * @return Collection|Utilisateur[]
+     */
+    public function getUtilisateurs(): Collection
     {
-        return $this->raisonSociale;
+        return $this->utilisateurs;
     }
 
-    public function setRaisonSociale(string $raisonSociale): self
+    public function addUtilisateur(Utilisateur $utilisateur): self
     {
-        $this->raisonSociale = $raisonSociale;
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs[] = $utilisateur;
+            $utilisateur->setPartenaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Utilisateur $utilisateur): self
+    {
+        if ($this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs->removeElement($utilisateur);
+            // set the owning side to null (unless already changed)
+            if ($utilisateur->getPartenaire() === $this) {
+                $utilisateur->setPartenaire(null);
+            }
+        }
 
         return $this;
     }
@@ -68,27 +99,47 @@ class Partenaire
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getRaisonSociale(): ?string
     {
-        return $this->statut;
+        return $this->raisonSociale;
     }
 
-    public function setStatut(string $statut): self
+    public function setRaisonSociale(string $raisonSociale): self
     {
-        $this->statut = $statut;
+        $this->raisonSociale = $raisonSociale;
 
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    /**
+     * @return Collection|Compte[]
+     */
+    public function getComptes(): Collection
     {
-        return $this->utilisateur;
+        return $this->comptes;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): self
+    public function addCompte(Compte $compte): self
     {
-        $this->utilisateur = $utilisateur;
+        if (!$this->comptes->contains($compte)) {
+            $this->comptes[] = $compte;
+            $compte->setPartenaire($this);
+        }
 
         return $this;
     }
+
+    public function removeCompte(Compte $compte): self
+    {
+        if ($this->comptes->contains($compte)) {
+            $this->comptes->removeElement($compte);
+            // set the owning side to null (unless already changed)
+            if ($compte->getPartenaire() === $this) {
+                $compte->setPartenaire(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

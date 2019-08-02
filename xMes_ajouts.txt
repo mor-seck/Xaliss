@@ -1,0 +1,74 @@
+Ajouter un admin
+{
+"username":"morseck15",
+"roles":["admi partenaire"],
+"password":"eleves00",
+"prenom":"Pape",
+"nom":"SECK",
+"adresse":"pikine",
+"telephone":"77 328 03 48 ",
+"email":"morseck00@gmail.com",
+"statut":"inactif",
+"raisonSociale":"1525GDKD",
+"ninea":"452545559587"
+}
+
+Ajouter un user partenaire
+{
+"username":"partenaire3",
+"password":"eleves00",
+"prenom":"Partenaire3",
+"nom":"Partenaire3",
+"adresse":"pikine",
+"telephone":"33 328 03 48 ",
+"email":"partenair3e@gmail.com",
+"statut":"Actif",
+"raisonSociale":"1525G5554DK5554D",
+"ninea":"241545DF68555855545",
+"num_compte":24154568555855545,
+"solde":0
+}
+
+
+
+{
+"username":"admin",
+"password": "admin",
+"prenom": "Pape",
+"nom": "SECK",
+"adresse": "pikine",
+"telephone": "77 328 03 48 ",
+"email": "morseck00@gmail.com",
+"raisonSociale": "1525GDKD"
+}
+
+{
+"utilisateur":1,
+"montant":175000,
+"compte":1
+}
+
+  $compteUpdate = $entityManager->getRepository(Compte::class)->find($compte->getId());
+        $data = json_decode($request->getContent());
+        foreach ($data as $key => $value) {
+            if ($key && !empty($value)) {
+                $name = ucfirst($key);
+                $setter = 'set' . $name;
+                $compteUpdate->$setter(($depot->setMontant($values->montant))+ $compte->getMontant());
+            }
+        }
+        $errors = $validator->validate($compteUpdate);
+        if (count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+
+ ajouter un depot
+{
+"utilisateur":1,
+"montant":150000,
+"date_depot":"02-05-2018",
+"compte":1
+}

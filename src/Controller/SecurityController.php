@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -14,7 +15,7 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Utilisateur;
 use App\Entity\Partenaire;
-
+use App\Entity\Compte;
 
 /**
  * @Route("/api")
@@ -27,12 +28,16 @@ class SecurityController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
         $values = json_decode($request->getContent());
-       
+
 
         if (isset($values->username, $values->password)) {
 
             $values        = json_decode($request->getContent());
             $entityManager = $this->getDoctrine()->getManager();
+
+            $partenaire    = new Partenaire();
+            $partenaire->setRaisonSociale($values->raisonSociale);
+            $partenaire->setNinea($values->ninea);
 
             $utilisateur = new Utilisateur();
             $utilisateur->setUsername($values->username);
@@ -43,27 +48,30 @@ class SecurityController extends AbstractController
             $utilisateur->setAdresse($values->adresse);
             $utilisateur->setTelephone($values->telephone);
             $utilisateur->setEmail($values->email);
+            $utilisateur->setStatut($values->statut);
+            $utilisateur->setPartenaire($partenaire);
+            
+            $compte   = new Compte();
+            $compte->setPartenaire($partenaire);
+            $compte->setNumCompte($values->num_compte);
+            $compte->setSolde($values->solde);
+            $compte->setUtilisateur($utilisateur);
 
-            $partenaire = new Partenaire();
-            $partenaire->setUtilisateur($utilisateur);
-            $partenaire->setRaisonSociale($values->raisonSociale);
-            $partenaire->setNinea($values->ninea);
-            $partenaire->setStatut($values->statut);
-          
             $entityManager->persist($utilisateur);
             $entityManager->persist($partenaire);
+            $entityManager->persist($compte);
             $entityManager->flush();
 
             $data = [
-                'status' => 201,
-                'message'=> "L'utilisateur a été créé"
+                'status1' => 201,
+                'message1' => "L'utilisateur a été créé"
             ];
 
             return new JsonResponse($data, 201);
         }
         $data = [
             'status' => 500,
-            'message'=> 'Vous devez renseigner les clés username et password'
+            'message' => 'Vous devez renseigner les clés username et password'
         ];
         return new JsonResponse($data, 500);
     }

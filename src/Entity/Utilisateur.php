@@ -60,15 +60,37 @@ class Utilisateur implements UserInterface
      */
     private $email;
 
+  
+
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Partenaire", mappedBy="utilisateur")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="utilisateurs")
      */
-    private $partenaires;
+    private $partenaire;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $statut;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="utilisateur")
+     */
+    private $depots;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="utilisateur")
+     */
+    private $comptes;
 
     public function __construct()
     {
-        $this->partenaires = new ArrayCollection();
+        $this->depots = new ArrayCollection();
+        $this->comptes = new ArrayCollection();
     }
+
+   
+
+   
 
     public function getId(): ?int
     {
@@ -99,7 +121,7 @@ class Utilisateur implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_ADMIN_SUP';
+        $roles[] = 'ROLE_ADMIN_PARTENAIRE';
 
         return array_unique($roles);
     }
@@ -203,34 +225,94 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Partenaire[]
-     */
-    public function getPartenaires(): Collection
+  
+
+    public function getPartenaire(): ?Partenaire
     {
-        return $this->partenaires;
+        return $this->partenaire;
     }
 
-    public function addPartenaire(Partenaire $partenaire): self
+    public function setPartenaire(?Partenaire $partenaire): self
     {
-        if (!$this->partenaires->contains($partenaire)) {
-            $this->partenaires[] = $partenaire;
-            $partenaire->setUtilisateur($this);
+        $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): self
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Depot[]
+     */
+    public function getDepots(): Collection
+    {
+        return $this->depots;
+    }
+
+    public function addDepot(Depot $depot): self
+    {
+        if (!$this->depots->contains($depot)) {
+            $this->depots[] = $depot;
+            $depot->setUtilisateur($this);
         }
 
         return $this;
     }
 
-    public function removePartenaire(Partenaire $partenaire): self
+    public function removeDepot(Depot $depot): self
     {
-        if ($this->partenaires->contains($partenaire)) {
-            $this->partenaires->removeElement($partenaire);
+        if ($this->depots->contains($depot)) {
+            $this->depots->removeElement($depot);
             // set the owning side to null (unless already changed)
-            if ($partenaire->getUtilisateur() === $this) {
-                $partenaire->setUtilisateur(null);
+            if ($depot->getUtilisateur() === $this) {
+                $depot->setUtilisateur(null);
             }
         }
 
         return $this;
     }
+
+    /**
+     * @return Collection|Compte[]
+     */
+    public function getComptes(): Collection
+    {
+        return $this->comptes;
+    }
+
+    public function addCompte(Compte $compte): self
+    {
+        if (!$this->comptes->contains($compte)) {
+            $this->comptes[] = $compte;
+            $compte->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompte(Compte $compte): self
+    {
+        if ($this->comptes->contains($compte)) {
+            $this->comptes->removeElement($compte);
+            // set the owning side to null (unless already changed)
+            if ($compte->getUtilisateur() === $this) {
+                $compte->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    
 }
