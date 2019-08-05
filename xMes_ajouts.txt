@@ -72,3 +72,8 @@ Ajouter un user partenaire
 "date_depot":"02-05-2018",
 "compte":1
 }
+
+{
+	"username":"morseck00",
+    "password":"eleves00"
+}

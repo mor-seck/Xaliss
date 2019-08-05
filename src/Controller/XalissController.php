@@ -1,25 +1,23 @@
 <?php
-
 namespace App\Controller;
-
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\Common\Persistence\PersistentObject;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use App\Repository\UtilisateurRepository;
-use App\Repository\CompteRepository;
-use App\Repository\DepotRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Utilisateur;
-use App\Entity\Compte;
 use App\Entity\Depot;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use phpDocumentor\Reflection\DocBlock\Serializer;
+use App\Entity\Compte;
+use App\Entity\Utilisateur;
+use App\Repository\DepotRepository;
 use App\Repository\PhoneRepository;
+use App\Repository\CompteRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UtilisateurRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Persistence\PersistentObject;
+use phpDocumentor\Reflection\DocBlock\Serializer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class XalissController extends AbstractController
 {
@@ -42,25 +40,23 @@ class XalissController extends AbstractController
     {
         $values          = json_decode($request->getContent());
         $entityManager   = $this->getDoctrine()->getManager();
-
         $utilisateurRepo = $this->getDoctrine()->getRepository(Utilisateur::class);
         $utilisateur     = $utilisateurRepo->find($values->utilisateur);
 
-        $compteRepo = $this->getDoctrine()->getRepository(Compte::class);
-        $compte     = $compteRepo->find($values->compte);
-
-        $depot = new Depot();
+        $compteRepo      = $this->getDoctrine()->getRepository(Compte::class)->find($values->compte);
+        $depot           = new Depot();
 
         $depot->setUtilisateur($utilisateur);
         $depot->setMontant($values->montant);
         $depot->setDateDepot(new \DateTime($values->date_depot));
-        $depot->setCompte($compte);
-
+        $depot->setCompte($compteRepo->setSolde($compteRepo->getSolde() + $values->montant));
+      
         $entityManager->persist($depot);
         $entityManager->flush();
-        return new Response("le dépot est effectué avec success");
+        return new Response("le dÃ©pot est effectuÃ© avec success");
     }
 
+     // CETTE PARTI DU CODE ME PERMET DE MODIFIER UN DEPOT
     /**
      * @Route("/depot/{id}", name="update_depo", methods={"PUT"})
      */
@@ -84,7 +80,31 @@ class XalissController extends AbstractController
         }
         $entityManager->flush();
         return new JsonResponse($data);
-    }
-   
+    }  
 
+     // CETTE PARTI DU CODE ME PERMET DE MODIFIER UN BLOquer un Partenaire
+    /**
+     * @Route("/utilisateur/{id}", name="update_utilisateur", methods={"PUT"})
+     */
+    public function bloquer_partenaire(SerializerInterface $serializer,Request $request, Utilisateur $utilisateur, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    {
+        $utilisateurUpdate = $entityManager->getRepository(Utilisateur::class)->find($utilisateur->getId());
+        $data = json_decode($request->getContent());
+        foreach ($data as $key => $value) {
+            if ($key && !empty($value)){
+                $name = ucfirst($key);
+                $setter = 'set'.$name;
+                $utilisateurUpdate->$setter($value);
+            }
+        }
+        $errors = $validator->validate($utilisateurUpdate);
+        if (count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+        $entityManager->flush();
+        return new JsonResponse($data);
+    }  
 }

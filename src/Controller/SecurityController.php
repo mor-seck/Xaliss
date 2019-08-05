@@ -29,13 +29,12 @@ class SecurityController extends AbstractController
     {
         $values = json_decode($request->getContent());
 
-
         if (isset($values->username, $values->password)) {
 
             $values        = json_decode($request->getContent());
             $entityManager = $this->getDoctrine()->getManager();
 
-            $partenaire    = new Partenaire();
+            $partenaire = new Partenaire();
             $partenaire->setRaisonSociale($values->raisonSociale);
             $partenaire->setNinea($values->ninea);
 
@@ -51,9 +50,9 @@ class SecurityController extends AbstractController
             $utilisateur->setStatut($values->statut);
             $utilisateur->setPartenaire($partenaire);
             
-            $compte   = new Compte();
+            $compte = new Compte();
             $compte->setPartenaire($partenaire);
-            $compte->setNumCompte($values->num_compte);
+            $compte->setNumCompte(rand(000000000000000,9999999999999999));
             $compte->setSolde($values->solde);
             $compte->setUtilisateur($utilisateur);
 

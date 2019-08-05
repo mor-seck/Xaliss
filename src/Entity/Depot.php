@@ -29,6 +29,8 @@ class Depot
      */
     private $montant;
 
+  
+    
     /**
      * @ORM\Column(type="date")
      */
@@ -68,6 +70,8 @@ class Depot
 
         return $this;
     }
+
+   
 
     public function getDateDepot(): ?\DateTimeInterface
     {

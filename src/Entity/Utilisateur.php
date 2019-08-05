@@ -6,9 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
+ * @Vich\Uploadable
  */
 class Utilisateur implements UserInterface
 {
@@ -67,11 +70,7 @@ class Utilisateur implements UserInterface
      */
     private $partenaire;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $statut;
-
+   
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="utilisateur")
      */
@@ -81,6 +80,12 @@ class Utilisateur implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="utilisateur")
      */
     private $comptes;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $statut;
+
 
     public function __construct()
     {
@@ -162,7 +167,6 @@ class Utilisateur implements UserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
     public function getPrenom(): ?string
@@ -239,17 +243,7 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    public function getStatut(): ?string
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(?string $statut): self
-    {
-        $this->statut = $statut;
-
-        return $this;
-    }
+   
 
     /**
      * @return Collection|Depot[]
@@ -313,6 +307,17 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
 
-    
+    public function setStatut(?string $statut): self
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+  
 }
