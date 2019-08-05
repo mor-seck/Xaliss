@@ -3,6 +3,7 @@ namespace App\Controller;
 use App\Entity\Depot;
 use App\Entity\Compte;
 use App\Entity\Utilisateur;
+use App\Entity\Partenaire;
 use App\Repository\DepotRepository;
 use App\Repository\PhoneRepository;
 use App\Repository\CompteRepository;
@@ -18,6 +19,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\VarExporter\Internal\Values;
 
 class XalissController extends AbstractController
 {
@@ -106,5 +109,6 @@ class XalissController extends AbstractController
         }
         $entityManager->flush();
         return new JsonResponse($data);
-    }  
+    }
+
 }

@@ -53,7 +53,7 @@ class SecurityController extends AbstractController
             $compte = new Compte();
             $compte->setPartenaire($partenaire);
             $compte->setNumCompte(rand(000000000000000,9999999999999999));
-            $compte->setSolde($values->solde);
+            $compte->setSolde(0);
             $compte->setUtilisateur($utilisateur);
 
             $entityManager->persist($utilisateur);
