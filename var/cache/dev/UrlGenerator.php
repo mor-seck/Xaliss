@@ -8,6 +8,7 @@ return [
     'login' => [[], ['_controller' => 'App\\Controller\\SecurityController::login'], [], [['text', '/api/login']], [], []],
     'xaliss' => [[], ['_controller' => 'App\\Controller\\XalissController::index'], [], [['text', '/xaliss']], [], []],
     'ajouter_depot' => [[], ['_controller' => 'App\\Controller\\XalissController::ajouter_depot'], [], [['text', '/ajouter_depot']], [], []],
+    'ajouter_caissier' => [[], ['_controller' => 'App\\Controller\\XalissController::ajouter_caissier'], [], [['text', '/ajouter_caissier']], [], []],
     'update_depo' => [['id'], ['_controller' => 'App\\Controller\\XalissController::updatedepot'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/depot']], [], []],
     'update_utilisateur' => [['id'], ['_controller' => 'App\\Controller\\XalissController::bloquer_partenaire'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/utilisateur']], [], []],
     'api_entrypoint' => [['index', '_format'], ['_controller' => 'api_platform.action.entrypoint', '_format' => '', '_api_respond' => 'true', 'index' => 'index'], ['index' => 'index'], [['variable', '.', '[^/]++', '_format', true], ['variable', '/', 'index', 'index', true], ['text', '/api']], [], []],

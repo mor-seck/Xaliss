@@ -12,6 +12,7 @@ return [
         '/api/login' => [[['_route' => 'login', '_controller' => 'App\\Controller\\SecurityController::login'], null, ['POST' => 0], null, false, false, null]],
         '/xaliss' => [[['_route' => 'xaliss', '_controller' => 'App\\Controller\\XalissController::index'], null, null, null, false, false, null]],
         '/ajouter_depot' => [[['_route' => 'ajouter_depot', '_controller' => 'App\\Controller\\XalissController::ajouter_depot'], null, ['POST' => 0], null, false, false, null]],
+        '/ajouter_caissier' => [[['_route' => 'ajouter_caissier', '_controller' => 'App\\Controller\\XalissController::ajouter_caissier'], null, ['POST' => 0], null, false, false, null]],
         '/api/login_check' => [[['_route' => 'api_login_check'], null, null, null, false, false, null]],
     ],
     [ // $regexpList

@@ -62,7 +62,7 @@ class SecurityController extends AbstractController
             $entityManager->flush();
 
             $data = [
-                'status1' => 201,
+                'status1'  => 201,
                 'message1' => "L'utilisateur a été créé"
             ];
 

@@ -17,7 +17,7 @@ class DepotControllerTest extends WebTestCase
 
         '{
             "utilisateur":1,
-            "montant":75000,
+            "montant":5000,
             "date_depot":"02-05-2018",
             "compte":2
          }'

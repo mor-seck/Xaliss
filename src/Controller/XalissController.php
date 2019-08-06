@@ -46,7 +46,7 @@ class XalissController extends AbstractController
         $utilisateurRepo = $this->getDoctrine()->getRepository(Utilisateur::class);
         $utilisateur     = $utilisateurRepo->find($values->utilisateur);
 
-        $compteRepo      = $this->getDoctrine()->getRepository(Compte     ::class)->find($values->compte);
+        $compteRepo      = $this->getDoctrine()->getgitRepository(Compte::class)->find($values->compte);
         $depot           = new Depot();
 
         $depot->setUtilisateur($utilisateur);
@@ -61,6 +61,33 @@ class XalissController extends AbstractController
             return new Response("le dÃ©pot est effectuÃ© avec success");
         }
        
+    }
+
+    /**
+     * @Route("/ajouter_caissier", name="ajouter_caissier",methodS={"POST"})
+     */
+    public function ajouter_caissier(Request $request, UserPasswordEncoderInterface $passwordEncoder){
+
+        $values         = json_decode($request->getContent());
+        $entityManager  = $this->getDoctrine()->getManager();
+        $partenaireRepo = $this->getDoctrine()->getRepository(Partenaire::class);
+        $partenaire     = $partenaireRepo->find($values->partenaire);
+        $caissier       = new Utilisateur();
+
+        $caissier->setUsername($values->username);
+        $caissier->setPassword($passwordEncoder->encodePassword($caissier, $values->password));
+        $caissier->setRoles($values->roles);
+        $caissier->setPrenom($values->prenom);
+        $caissier->setNom($values->nom);
+        $caissier->setAdresse($values->adresse);
+        $caissier->setTelephone($values->telephone);
+        $caissier->setEmail($values->email);
+        $caissier->setStatut("Actif");
+        $caissier->setPartenaire($partenaire);
+          
+        $entityManager->persist($caissier);
+        $entityManager->flush();
+        return new Response("le dépot est effectué avec success");
     }
 
      // CETTE PARTI DU CODE ME PERMET DE MODIFIER UN DEPOT
@@ -115,10 +142,4 @@ class XalissController extends AbstractController
         $entityManager->flush();
         return new JsonResponse($data);
     }
-
-    public function add($a, $b)
-    {
-        return $a + $b;
-    }
-
 }

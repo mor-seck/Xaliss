@@ -26,7 +26,7 @@ class AdminSupFixtures extends Fixture
         $utilisateur->setPrenom('Mor');
         $utilisateur->setNom('SECK');
         $utilisateur->setAdresse('Pikine');
-        $utilisateur->setTelephone('77 328 03 48');
+        $utilisateur->setTelephone('773280348');
         $utilisateur->setEmail('morseck00@gmail.com');
 
         $manager->persist($utilisateur);
