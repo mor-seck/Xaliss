@@ -37,7 +37,7 @@ class XalissController extends AbstractController
     // CETTE PARTI DU CODE ME PERMET D'AJOUTER UN DEPOT
     
     /**
-     * @Route("/ajouter_depot", name="ajouter_depot")
+     * @Route("/ajouter_depot", name="ajouter_depot",methodS={"POST"})
      */
     public function ajouter_depot(Request $request)
     {
@@ -53,15 +53,20 @@ class XalissController extends AbstractController
         $depot->setMontant($values->montant);
         $depot->setDateDepot(new \DateTime($values->date_depot));
         $depot->setCompte($compteRepo->setSolde($compteRepo->getSolde() + $values->montant));
-      
-        $entityManager->persist($depot);
-        $entityManager->flush();
-        return new Response("le dépot est effectué avec success");
+        if($values->montant<75000){
+            echo"la somme doit �tres au minimum 750000";
+        }else{
+            $entityManager->persist($depot);
+            $entityManager->flush();
+            return new Response("le dépot est effectué avec success");
+        }
+       
     }
 
      // CETTE PARTI DU CODE ME PERMET DE MODIFIER UN DEPOT
     /**
      * @Route("/depot/{id}", name="update_depo", methods={"PUT"})
+     * 
      */
     public function updatedepot(SerializerInterface $serializer,Request $request, Compte $compte, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {

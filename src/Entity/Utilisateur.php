@@ -6,12 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
- * @Vich\Uploadable
  */
 class Utilisateur implements UserInterface
 {
@@ -93,9 +90,6 @@ class Utilisateur implements UserInterface
         $this->comptes = new ArrayCollection();
     }
 
-   
-
-   
 
     public function getId(): ?int
     {
@@ -126,7 +120,7 @@ class Utilisateur implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_ADMIN_PARTENAIRE';
+        $roles[] = '[]';
 
         return array_unique($roles);
     }
@@ -317,7 +311,5 @@ class Utilisateur implements UserInterface
         $this->statut = $statut;
 
         return $this;
-    }
-
-  
+    }  
 }

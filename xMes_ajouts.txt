@@ -66,12 +66,7 @@ Ajouter un user partenaire
         }
 
  ajouter un depot
-{
-"utilisateur":1,
-"montant":150000,
-"date_depot":"02-05-2018",
-"compte":1
-}
+
 
 {
 	"username":"morseck00",
@@ -84,5 +79,4 @@ Ajouter un user partenaire
 "montant":750000,
 "date_depot":"02-05-2018",
 "compte":2
-
 }
