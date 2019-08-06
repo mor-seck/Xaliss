@@ -46,7 +46,7 @@ class XalissController extends AbstractController
         $utilisateurRepo = $this->getDoctrine()->getRepository(Utilisateur::class);
         $utilisateur     = $utilisateurRepo->find($values->utilisateur);
 
-        $compteRepo      = $this->getDoctrine()->getRepository(Compte::class)->find($values->compte);
+        $compteRepo      = $this->getDoctrine()->getRepository(Compte     ::class)->find($values->compte);
         $depot           = new Depot();
 
         $depot->setUtilisateur($utilisateur);
@@ -114,6 +114,11 @@ class XalissController extends AbstractController
         }
         $entityManager->flush();
         return new JsonResponse($data);
+    }
+
+    public function add($a, $b)
+    {
+        return $a + $b;
     }
 
 }
