@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
  */
@@ -60,14 +61,11 @@ class Utilisateur implements UserInterface
      */
     private $email;
 
-  
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="utilisateurs")
      */
     private $partenaire;
 
-   
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="utilisateur")
      */
@@ -86,7 +84,7 @@ class Utilisateur implements UserInterface
 
     public function __construct()
     {
-        $this->depots = new ArrayCollection();
+        $this->depots  = new ArrayCollection();
         $this->comptes = new ArrayCollection();
     }
 
@@ -223,8 +221,6 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-  
-
     public function getPartenaire(): ?Partenaire
     {
         return $this->partenaire;
@@ -236,8 +232,6 @@ class Utilisateur implements UserInterface
 
         return $this;
     }
-
-   
 
     /**
      * @return Collection|Depot[]
@@ -311,5 +305,7 @@ class Utilisateur implements UserInterface
         $this->statut = $statut;
 
         return $this;
-    }  
+    }
+
+
 }

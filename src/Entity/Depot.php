@@ -29,8 +29,6 @@ class Depot
      */
     private $montant;
 
-  
-    
     /**
      * @ORM\Column(type="date")
      */

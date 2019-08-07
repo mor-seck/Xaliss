@@ -41,7 +41,7 @@ class SecurityController extends AbstractController
             $utilisateur = new Utilisateur();
             $utilisateur->setUsername($values->username);
             $utilisateur->setPassword($passwordEncoder->encodePassword($utilisateur, $values->password));
-            $utilisateur->setRoles($utilisateur->getRoles());
+            $utilisateur->setRoles($values->roles);
             $utilisateur->setPrenom($values->prenom);
             $utilisateur->setNom($values->nom);
             $utilisateur->setAdresse($values->adresse);
@@ -69,7 +69,7 @@ class SecurityController extends AbstractController
             return new JsonResponse($data, 201);
         }
         $data = [
-            'status' => 500,
+            'status'  => 500,
             'message' => 'Vous devez renseigner les clés username et password'
         ];
         return new JsonResponse($data, 500);

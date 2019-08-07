@@ -16,13 +16,13 @@ class DepotControllerTest extends WebTestCase
             'POST', '/ajouter_depot',[],[],['CONTENT_TYPE' => "application/json"],
 
         '{
-            "utilisateur":1,
-            "montant":5000,
-            "date_depot":"02-05-2018",
+            "utilisateur":15,
+            "montant":800000,
+            "date_depot":"02-05-2019",
             "compte":2
          }'
         );
         $rep = $client->getResponse();
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->assertSame(201, $client->getResponse()->getStatusCode());
     }
 }

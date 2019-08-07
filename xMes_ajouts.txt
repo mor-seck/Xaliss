@@ -80,3 +80,17 @@ Ajouter un user partenaire
 "date_depot":"02-05-2018",
 "compte":2
 }
+
+//Ajouter un Caissier
+localhost:8000/ajouter_caissier
+{
+"username":"caissier1",
+"roles":["ROLE_CAISSIER"],
+"password":"caissier1",
+"prenom":"caissier1",
+"nom":"caissier1",
+"adresse":"caissier1",
+"telephone":"77 777 77 77",
+"email":"caissier1@gmail.com",
+"partenaire":1
+}
