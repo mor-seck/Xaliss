@@ -2,20 +2,21 @@
 
 namespace App\Controller;
 
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\Common\Persistence\PersistentObject;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use App\Repository\UtilisateurRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Utilisateur;
-use App\Entity\Partenaire;
 use App\Entity\Compte;
+use App\Entity\Partenaire;
+use App\Entity\Utilisateur;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UtilisateurRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Persistence\PersistentObject;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/api")
@@ -24,6 +25,7 @@ class SecurityController extends AbstractController
 {
     /**
      * @Route("/register", name="register", methods={"POST"})
+     * 
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
@@ -49,6 +51,7 @@ class SecurityController extends AbstractController
             $utilisateur->setEmail($values->email);
             $utilisateur->setStatut($values->statut);
             $utilisateur->setPartenaire($partenaire);
+            $utilisateur->setImageName($values->imageName);
             
             $compte = new Compte();
             $compte->setPartenaire($partenaire);

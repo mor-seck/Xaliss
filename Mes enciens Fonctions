@@ -1,0 +1,29 @@
+ /**
+     * @Route("/ajouter_caissier", name="ajouter_caissier",methodS={"POST"})
+     */
+    public function ajouter_caissier(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+
+        $values         = json_decode($request->getContent());
+        $entityManager  = $this->getDoctrine()->getManager();
+        $partenaireRepo = $this->getDoctrine()->getRepository(Partenaire::class);
+        $partenaire     = $partenaireRepo->find($values->partenaire);
+        $caissier       = new Utilisateur();
+
+        $caissier->setUsername($values->username);
+        $caissier->setPassword($passwordEncoder->encodePassword($caissier, $values->password));
+        $caissier->setRoles($values->roles);
+        $caissier->setPrenom($values->prenom);
+        $caissier->setNom($values->nom);
+        $caissier->setAdresse($values->adresse);
+        $caissier->setTelephone($values->telephone);
+        $caissier->setEmail($values->email);
+        $caissier->setStatut("Actif");
+        $caissier->setPartenaire($partenaire);
+
+        $entityManager->persist($caissier);
+        $entityManager->flush();
+        return new Response("le depot est effectue avec success");
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////

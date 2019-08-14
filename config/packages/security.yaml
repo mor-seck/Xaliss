@@ -35,7 +35,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        -{ path: ^/ajouter_depot, roles: ROLE_CAISSIER}
-        # -{ path: ^/profile, roles: ROLE_USER }
+        # -{ path: ^/ajouter_depot, roles: ROLE_CAISSIER }
+        # -{ path: ^/register, roles: ROLE_ADMIN_SUP }
+        # -{ path: ^/ajouter_caissier, roles: ROLE_ADMIN_SUP }
+        # -{ path: ^/register, roles: ROLE_ADMIN_PARTENAIRE }
         # -{ path: ^/api/login,roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # -{ path: ^/api,roles:IS_AUTHENTICATED_FULLY }

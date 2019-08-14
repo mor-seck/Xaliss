@@ -5,11 +5,15 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
+ * @Vich\Uploadable
  */
 class Utilisateur implements UserInterface
 {
@@ -19,7 +23,7 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
-
+   
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
@@ -80,13 +84,6 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $statut;
-
-
-    public function __construct()
-    {
-        $this->depots  = new ArrayCollection();
-        $this->comptes = new ArrayCollection();
-    }
 
 
     public function getId(): ?int
@@ -295,6 +292,8 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
+   
+
     public function getStatut(): ?string
     {
         return $this->statut;
@@ -306,6 +305,5 @@ class Utilisateur implements UserInterface
 
         return $this;
     }
-
-
+   
 }

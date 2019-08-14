@@ -44,10 +44,16 @@ class Partenaire
      */
     private $comptes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Envoi", mappedBy="Agence", orphanRemoval=true)
+     */
+    private $date_envoi;
+
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
         $this->comptes = new ArrayCollection();
+        $this->date_envoi = new ArrayCollection();
     }
 
     
@@ -136,6 +142,37 @@ class Partenaire
             // set the owning side to null (unless already changed)
             if ($compte->getPartenaire() === $this) {
                 $compte->setPartenaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Envoi[]
+     */
+    public function getDateEnvoi(): Collection
+    {
+        return $this->date_envoi;
+    }
+
+    public function addDateEnvoi(Envoi $dateEnvoi): self
+    {
+        if (!$this->date_envoi->contains($dateEnvoi)) {
+            $this->date_envoi[] = $dateEnvoi;
+            $dateEnvoi->setAgence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDateEnvoi(Envoi $dateEnvoi): self
+    {
+        if ($this->date_envoi->contains($dateEnvoi)) {
+            $this->date_envoi->removeElement($dateEnvoi);
+            // set the owning side to null (unless already changed)
+            if ($dateEnvoi->getAgence() === $this) {
+                $dateEnvoi->setAgence(null);
             }
         }
 

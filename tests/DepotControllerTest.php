@@ -16,10 +16,10 @@ class DepotControllerTest extends WebTestCase
             'POST', '/ajouter_depot',[],[],['CONTENT_TYPE' => "application/json"],
 
         '{
-            "utilisateur":15,
-            "montant":800000,
-            "date_depot":"02-05-2019",
-            "compte":2
+            "utilisateur":4,
+            "montant":75000,
+            "date_depot":"10-08-2019",
+            "compte":1
          }'
         );
         $rep = $client->getResponse();
