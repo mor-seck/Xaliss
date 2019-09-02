@@ -49,11 +49,17 @@ class Partenaire
      */
     private $date_envoi;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Retrait", mappedBy="Agence")
+     */
+    private $retraits;
+
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
         $this->comptes = new ArrayCollection();
         $this->date_envoi = new ArrayCollection();
+        $this->retraits = new ArrayCollection();
     }
 
     
@@ -173,6 +179,37 @@ class Partenaire
             // set the owning side to null (unless already changed)
             if ($dateEnvoi->getAgence() === $this) {
                 $dateEnvoi->setAgence(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Retrait[]
+     */
+    public function getRetraits(): Collection
+    {
+        return $this->retraits;
+    }
+
+    public function addRetrait(Retrait $retrait): self
+    {
+        if (!$this->retraits->contains($retrait)) {
+            $this->retraits[] = $retrait;
+            $retrait->setAgence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRetrait(Retrait $retrait): self
+    {
+        if ($this->retraits->contains($retrait)) {
+            $this->retraits->removeElement($retrait);
+            // set the owning side to null (unless already changed)
+            if ($retrait->getAgence() === $this) {
+                $retrait->setAgence(null);
             }
         }
 

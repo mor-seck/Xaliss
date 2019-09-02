@@ -15,14 +15,14 @@ class CompteType extends AbstractType
             ->add('num_compte')
             ->add('solde')
             ->add('partenaire')
-            ->add('utilisateur')
-        ;
+            ->add('utilisateur');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Compte::class,
+            'csrf_protection' => false
         ]);
     }
 }

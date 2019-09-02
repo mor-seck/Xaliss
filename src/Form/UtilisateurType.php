@@ -6,7 +6,8 @@ use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Vich\UploaderBundle\Form\Type\VichImageType;
+
+
 
 class UtilisateurType extends AbstractType
 {
@@ -14,24 +15,20 @@ class UtilisateurType extends AbstractType
     {
         $builder
             ->add('username')
-            ->add('roles')
             ->add('password')
             ->add('prenom')
             ->add('nom')
             ->add('adresse')
             ->add('telephone')
             ->add('email')
-            ->add('statut')
-            ->add('partenaire')
-            ->add('imageFile',FileType::class,[
-                'require=>false'
-                ]);
+            ->add('image');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
+            'csrf_protection' => false
         ]);
     }
 }

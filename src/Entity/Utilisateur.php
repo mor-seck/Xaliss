@@ -2,18 +2,14 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Security\Core\User\UserInterface;
-
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
- * @Vich\Uploadable
  */
 class Utilisateur implements UserInterface
 {
@@ -23,7 +19,7 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
-   
+
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
@@ -34,6 +30,7 @@ class Utilisateur implements UserInterface
      */
     private $roles = [];
 
+   
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
@@ -66,7 +63,7 @@ class Utilisateur implements UserInterface
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="utilisateurs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="utilisateurs",cascade={"persist"})
      */
     private $partenaire;
 
@@ -85,6 +82,10 @@ class Utilisateur implements UserInterface
      */
     private $statut;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image;
 
     public function getId(): ?int
     {
@@ -108,6 +109,7 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
+
     /**
      * @see UserInterface
      */
@@ -115,7 +117,7 @@ class Utilisateur implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = '[]';
+        $roles[] = '[ROLE_USER]';
 
         return array_unique($roles);
     }
@@ -292,7 +294,7 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-   
+
 
     public function getStatut(): ?string
     {
@@ -305,5 +307,16 @@ class Utilisateur implements UserInterface
 
         return $this;
     }
-   
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
 }

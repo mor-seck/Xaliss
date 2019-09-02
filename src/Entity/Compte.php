@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
@@ -21,8 +22,7 @@ class Compte
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes",cascade={"persist"})
      */
     private $partenaire;
 
@@ -42,7 +42,7 @@ class Compte
     private $depots;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur", inversedBy="comptes")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur", inversedBy="comptes",cascade={"persist"})
      */
     private $utilisateur;
 
@@ -88,7 +88,6 @@ class Compte
     public function setSolde(int $solde): self
     {
         $this->solde = $solde;
-
         return $this;
     }
 
@@ -106,7 +105,6 @@ class Compte
             $this->depots[] = $depot;
             $depot->setCompte($this);
         }
-
         return $this;
     }
 
@@ -139,7 +137,7 @@ class Compte
      * Set the value of id
      *
      * @return  self
-     */ 
+     */
     public function setId($id)
     {
         $this->id = $id;

@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
@@ -21,52 +22,56 @@ class Envoi
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="date_envoi")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="date_envoi",cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     *  @ORM\JoinColumn(name="agence_id", referencedColumnName="id")
+     *  @Assert\Valid()
      */
     private $Agence;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string", length=255)
      */
-    private $date_envoi;
+    private $nomenv;
 
     /**
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="string", length=255)
      */
-    private $code_envoi;
+    private $numtelenv;
 
     /**
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="string", length=255)
      */
-    private $montant;
+    private $piece_env;
 
     /**
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="string", length=255)
      */
-    private $commission_TTC;
+    private $num_piece_env;
 
     /**
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="string", length=255)
      */
-    private $total;
+    private $nomben;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Envoyeur", inversedBy="envois")
+     * @ORM\Column(type="string", length=255)
      */
-    private $envoyeur;
+    private $telben;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Beneficiaire", inversedBy="envois")
+     * @ORM\Column(type="string", length=255)
      */
-    private $beneficiaire;
+    private $montantenvoi;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $commission;
+
+   
     
-   
-
-
-   
-
+  
     public function getId(): ?int
     {
         return $this->id;
@@ -84,100 +89,102 @@ class Envoi
         return $this;
     }
 
-    public function getDateEnvoi(): ?\DateTimeInterface
+    public function getNomenv(): ?string
     {
-        return $this->date_envoi;
+        return $this->nomenv;
     }
 
-    public function setDateEnvoi(\DateTimeInterface $date_envoi): self
+    public function setNomenv(string $nomenv): self
     {
-        $this->date_envoi = $date_envoi;
+        $this->nomenv = $nomenv;
 
         return $this;
     }
 
-    public function getCodeEnvoi(): ?int
+    public function getNumtelenv(): ?string
     {
-        return $this->code_envoi;
+        return $this->numtelenv;
     }
 
-    public function setCodeEnvoi(int $code_envoi): self
+    public function setNumtelenv(string $numtelenv): self
     {
-        $this->code_envoi = $code_envoi;
+        $this->numtelenv = $numtelenv;
 
         return $this;
     }
 
-    public function getMontant(): ?int
+    public function getPieceEnv(): ?string
     {
-        return $this->montant;
+        return $this->piece_env;
     }
 
-    public function setMontant(int $montant): self
+    public function setPieceEnv(string $piece_env): self
     {
-        $this->montant = $montant;
+        $this->piece_env = $piece_env;
 
         return $this;
     }
 
-
-    public function getTotal(): ?int
+    public function getNumPieceEnv(): ?string
     {
-        return $this->total;
+        return $this->num_piece_env;
     }
 
-    public function setTotal(int $total): self
+    public function setNumPieceEnv(string $num_piece_env): self
     {
-        $this->total = $total;
+        $this->num_piece_env = $num_piece_env;
 
         return $this;
     }
 
-  
-
-    /**
-     * Get the value of commission_TTC
-     */ 
-    public function getCommission_TTC()
+    public function getNomben(): ?string
     {
-        return $this->commission_TTC;
+        return $this->nomben;
     }
 
-    /**
-     * Set the value of commission_TTC
-     *
-     * @return  self
-     */ 
-    public function setCommission_TTC($commission_TTC)
+    public function setNomben(string $nomben): self
     {
-        $this->commission_TTC = $commission_TTC;
+        $this->nomben = $nomben;
 
         return $this;
     }
 
-    public function getEnvoyeur(): ?Envoyeur
+    public function getTelben(): ?string
     {
-        return $this->envoyeur;
+        return $this->telben;
     }
 
-    public function setEnvoyeur(?Envoyeur $envoyeur): self
+    public function setTelben(string $telben): self
     {
-        $this->envoyeur = $envoyeur;
+        $this->telben = $telben;
 
         return $this;
     }
 
-    public function getBeneficiaire(): ?Beneficiaire
+    public function getMontantenvoi(): ?string
     {
-        return $this->beneficiaire;
+        return $this->montantenvoi;
     }
 
-    public function setBeneficiaire(?Beneficiaire $beneficiaire): self
+    public function setMontantenvoi(string $montantenvoi): self
     {
-        $this->beneficiaire = $beneficiaire;
+        $this->montantenvoi = $montantenvoi;
 
         return $this;
     }
 
-   
+    public function getCommission(): ?string
+    {
+        return $this->commission;
+    }
+
+    public function setCommission(string $commission): self
+    {
+        $this->commission = $commission;
+
+        return $this;
+    }
+
+    
+
 }

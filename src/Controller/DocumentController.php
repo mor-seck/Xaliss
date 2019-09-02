@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf;
-use Dompdf\Options;
+
 
 class DocumentController extends AbstractController
 {
@@ -14,16 +14,14 @@ class DocumentController extends AbstractController
      */
     public function index()
     {
-
-
         // instantiate and use the dompdf class
         $dompdf = new Dompdf();
         $dompdf->loadHtml("
-        Entre les soussignés :
+        <h1>Entre les soussignés :</h1>
 
-La société _________________, [forme juridique] au capital de <br>
-_________________ USD, dont le siège social est _______________ _____, 
-enregistrée au Registre du Commerce et des Sociétés de ____________<br>
+La société _________________, [forme juridique] au capital de
+_________________ USD, dont le siège social est ____________________, 
+enregistrée au Registre du Commerce et des Sociétés de ____________
 sous le numéro ______________, Représentée par M. __________________________ 
 [nom et qualité],
 
@@ -170,6 +168,5 @@ ___________________________                        ___________________________
 
         // Output the generated PDF to Browser
         $dompdf->stream();
-    
     }
 }

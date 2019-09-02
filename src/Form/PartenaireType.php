@@ -21,6 +21,7 @@ class PartenaireType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Partenaire::class,
+            'csrf_protection' => false
         ]);
     }
 }
