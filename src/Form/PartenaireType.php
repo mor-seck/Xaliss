@@ -13,8 +13,7 @@ class PartenaireType extends AbstractType
     {
         $builder
             ->add('ninea')
-            ->add('raisonSociale')
-        ;
+            ->add('raisonSociale');
     }
 
     public function configureOptions(OptionsResolver $resolver)

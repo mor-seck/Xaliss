@@ -21,6 +21,7 @@ class UtilisateurType extends AbstractType
             ->add('adresse')
             ->add('telephone')
             ->add('email')
+            ->add('compte')
             ->add('image');
     }
 

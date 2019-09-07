@@ -44,25 +44,15 @@ class Partenaire
      */
     private $comptes;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Envoi", mappedBy="Agence", orphanRemoval=true)
-     */
-    private $date_envoi;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Retrait", mappedBy="Agence")
-     */
-    private $retraits;
 
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
         $this->comptes = new ArrayCollection();
-        $this->date_envoi = new ArrayCollection();
-        $this->retraits = new ArrayCollection();
     }
 
-    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -153,67 +143,4 @@ class Partenaire
 
         return $this;
     }
-
-    /**
-     * @return Collection|Envoi[]
-     */
-    public function getDateEnvoi(): Collection
-    {
-        return $this->date_envoi;
-    }
-
-    public function addDateEnvoi(Envoi $dateEnvoi): self
-    {
-        if (!$this->date_envoi->contains($dateEnvoi)) {
-            $this->date_envoi[] = $dateEnvoi;
-            $dateEnvoi->setAgence($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDateEnvoi(Envoi $dateEnvoi): self
-    {
-        if ($this->date_envoi->contains($dateEnvoi)) {
-            $this->date_envoi->removeElement($dateEnvoi);
-            // set the owning side to null (unless already changed)
-            if ($dateEnvoi->getAgence() === $this) {
-                $dateEnvoi->setAgence(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Retrait[]
-     */
-    public function getRetraits(): Collection
-    {
-        return $this->retraits;
-    }
-
-    public function addRetrait(Retrait $retrait): self
-    {
-        if (!$this->retraits->contains($retrait)) {
-            $this->retraits[] = $retrait;
-            $retrait->setAgence($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRetrait(Retrait $retrait): self
-    {
-        if ($this->retraits->contains($retrait)) {
-            $this->retraits->removeElement($retrait);
-            // set the owning side to null (unless already changed)
-            if ($retrait->getAgence() === $this) {
-                $retrait->setAgence(null);
-            }
-        }
-
-        return $this;
-    }
-
 }

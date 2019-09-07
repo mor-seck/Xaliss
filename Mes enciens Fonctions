@@ -27,3 +27,25 @@
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	//==========================>FAiRE UN DEPOT===================================
+	/**
+	 * @Route("/depot", name="depot",methods={"POST"})
+	 */
+	public function depot(Request $request, EntityManagerInterface $entityManager)
+	{
+		$depot = new Depot();
+		$form  = $this->createForm(DepotType::class, $depot);
+		$data  = $request->request->all();
+
+		$form->submit($data);
+		if ($form->isSubmitted() && $form->IsValide()) {
+			$depot->setDateDepot(new \DateTime);
+			$utilisateur = new Utilisateur();
+			$compte      = new Compte();
+			$depot->setUtilisateur($utilisateur);
+			$depot->setCompte($compte);
+			$entityManager->persist($depot);
+		}
+	}

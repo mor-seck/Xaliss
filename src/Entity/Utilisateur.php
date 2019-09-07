@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -30,7 +31,7 @@ class Utilisateur implements UserInterface
      */
     private $roles = [];
 
-   
+
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
@@ -72,10 +73,6 @@ class Utilisateur implements UserInterface
      */
     private $depots;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="utilisateur")
-     */
-    private $comptes;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -86,6 +83,22 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transactions", mappedBy="agentenv")
+     */
+    private $transactions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="utilisateurs",cascade={"persist"})
+     */
+    private $compte;
+
+    public function __construct()
+    {
+        $this->transactions = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -263,36 +276,6 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Compte[]
-     */
-    public function getComptes(): Collection
-    {
-        return $this->comptes;
-    }
-
-    public function addCompte(Compte $compte): self
-    {
-        if (!$this->comptes->contains($compte)) {
-            $this->comptes[] = $compte;
-            $compte->setUtilisateur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCompte(Compte $compte): self
-    {
-        if ($this->comptes->contains($compte)) {
-            $this->comptes->removeElement($compte);
-            // set the owning side to null (unless already changed)
-            if ($compte->getUtilisateur() === $this) {
-                $compte->setUtilisateur(null);
-            }
-        }
-
-        return $this;
-    }
 
 
 
@@ -316,6 +299,49 @@ class Utilisateur implements UserInterface
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transactions[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transactions $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setAgentenv($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transactions $transaction): self
+    {
+        if ($this->transactions->contains($transaction)) {
+            $this->transactions->removeElement($transaction);
+            // set the owning side to null (unless already changed)
+            if ($transaction->getAgentenv() === $this) {
+                $transaction->setAgentenv(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCompte(): ?Compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?Compte $compte): self
+    {
+        $this->compte = $compte;
 
         return $this;
     }

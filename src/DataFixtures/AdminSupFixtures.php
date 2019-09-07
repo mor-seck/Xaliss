@@ -15,7 +15,7 @@ class AdminSupFixtures extends Fixture
     {
         $this->encoder = $encoder;
     }
-    
+
     public function load(ObjectManager $manager)
     {
         $utilisateur = new Utilisateur();

@@ -14,8 +14,7 @@ class CompteType extends AbstractType
         $builder
             ->add('num_compte')
             ->add('solde')
-            ->add('partenaire')
-            ->add('utilisateur');
+            ->add('partenaire');
     }
 
     public function configureOptions(OptionsResolver $resolver)

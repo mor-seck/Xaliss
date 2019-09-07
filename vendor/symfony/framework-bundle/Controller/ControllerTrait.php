@@ -351,7 +351,7 @@ trait ControllerTrait
     /**
      * Get a user from the Security Token Storage.
      *
-     * @return mixed
+     * @return object|null
      *
      * @throws \LogicException If SecurityBundle is not available
      *
@@ -366,12 +366,12 @@ trait ControllerTrait
         }
 
         if (null === $token = $this->container->get('security.token_storage')->getToken()) {
-            return;
+            return null;
         }
 
         if (!\is_object($user = $token->getUser())) {
             // e.g. anonymous authentication
-            return;
+            return null;
         }
 
         return $user;
@@ -405,7 +405,7 @@ trait ControllerTrait
     {
         if (!$this->container->has('messenger.default_bus')) {
             $message = class_exists(Envelope::class) ? 'You need to define the "messenger.default_bus" configuration option.' : 'Try running "composer require symfony/messenger".';
-            throw new \LogicException('The message bus is not enabled in your application. '.$message);
+            throw new \LogicException('The message bus is not enabled in your application. ' . $message);
         }
 
         return $this->container->get('messenger.default_bus')->dispatch($message);

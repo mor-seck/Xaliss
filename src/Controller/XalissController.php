@@ -12,8 +12,8 @@ use App\Form\CompteType;
 use App\Form\RetraitType;
 use App\Entity\Utilisateur;
 use App\Repository\PartenaireRepository;
-use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UtilisateurRepository;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -25,13 +25,24 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\Security;
 
+/**
+ * @Route("/api")
+ */
 class XalissController extends AbstractController
 {
 
-	//==========================>FAURE UN DEPOT=================================
 
+	private $security;
+
+	public function __construct(Security $security)
+	{
+		$this->security = $security;
+	}
+
+
+	//==========================>FAiRE UN DEPOT===================================
 	/**
 	 * @Route("/depot", name="depot",methods={"POST"})
 	 */
@@ -39,23 +50,25 @@ class XalissController extends AbstractController
 	{
 		$depot = new Depot();
 		$form  = $this->createForm(DepotType::class, $depot);
-		$data = $request->request->all();
+		$data  = $request->request->all();
+
 		$form->submit($data);
 		if ($form->isSubmitted() && $form->IsValide()) {
 			$depot->setDateDepot(new \DateTime);
 			$utilisateur = new Utilisateur();
-			$compte = new Compte();
+			$compte      = new Compte();
 			$depot->setUtilisateur($utilisateur);
 			$depot->setCompte($compte);
 			$entityManager->persist($depot);
 		}
 	}
-	//==========================>FIN UN DEPOT=================================
+	//==========================>FIN UN DEPOT==============================================
 
 
-	//==========================>LISTER PARTENAIRE=================================
+
+	//==========================>LISTER PARTENAIRE==========================================
 	/**
-	 * @Route("/lister/partenaire", name="lister_partenaire", methods={"POST", "GET"})
+	 * @Route("/lister_partenaires", name="lister_partenaire", methods={"POST", "GET"})
 	 */
 	public function liste_partenaire(PartenaireRepository $partenaireRepository): Response
 	{
@@ -63,73 +76,67 @@ class XalissController extends AbstractController
 		$encoders    = [new JsonEncoder()];
 		$normalizers = [new ObjectNormalizer()];
 		$serializer  = new Serializer($normalizers, $encoders);
-
-		// Serialize your object in Json
-		$jsonObject = $serializer->serialize($partenaire, 'json', [
+		$jsonObject  = $serializer->serialize($partenaire, 'json', [
 			'circular_reference_handler' => function ($object) {
 				return $object->getId();
 			}
 		]);
-
-		// For instance, return a Response with encoded Json
 		return new Response($jsonObject, 200, array('Content-Type1' => 'application/json1'));
 	}
+	//==========================>FIN UN LISTER PARTENAIRE====================================
 
-	//==========================>FIN UN LISTER PARTENAIRE=================================
 
 
 	//==========================>LISTER PARTENAIRE LA BON CODE=================================
 	/**
-	 * cette fonction met part
-	 * @Route("/lister", name="lister", methods={"POST", "GET"})
+	 * @Route("/lister_utilisateur", name="Lister_Partenaire", methods={"POST"})
 	 */
-	public function liste(UtilisateurRepository $utilisateurRepository): Response
+	public function listeuser(UtilisateurRepository $utilisateurRepository): Response
 	{
 		$partenaire  = $utilisateurRepository->findAll();
 		$encoders    = [new JsonEncoder()];
 		$normalizers = [new ObjectNormalizer()];
 		$serializer  = new Serializer($normalizers, $encoders);
-
-		// Serialize your object in Json
-		$jsonObject = $serializer->serialize($partenaire, 'json', [
+		$jsonObject  = $serializer->serialize($partenaire, 'json', [
 			'circular_reference_handler' => function ($object) {
 				return $object->getId();
 			}
 		]);
-
-		// For instance, return a Response with encoded Json
 		return new Response($jsonObject, 200, array('Content-Type1' => 'application/json1'));
 	}
-	//==========================>FIN LISTER PARTENAIRE=================================
+	//==========================>FIN LISTER PARTENAIRE===============================================
 
 
-	//==========================>AJOUTER UN COMPTE A UN PARTENAIRE=================================
+	//==========================>AJOUTER UN COMPTE A UN PARTENAIRE===================================
 	/**
-	 * @Route("/compte/ajouter", name="compte_ajout", methods={"POST"})
+	 * @Route("/ajouter/compte", name="Ajouter_Compte", methods={"POST"})
 	 */
-	public function creerCompte(Request $request, PartenaireRepository $partenaireRepository, ValidatorInterface $validator)
+	public function creerCompte(Request  $request, PartenaireRepository  $partenaireRepository, ValidatorInterface $validator)
 	{
 		$values  = $request->request->all();
 		$connect = $this->getDoctrine()->getManager();
 		$compte  = new Compte();
 		$form    = $this->createForm(CompteType::class, $compte);
 		$form->submit($values);
+		$utilisateur = $this->getUser();
 		if ($form->isSubmitted()) {
-			$compte->setNumCompte(rand(10000000, 99999));
+			$compte->setNumCompte(rand(000000000000000, 9999999999999999));
 			$compte->setSolde(0);
-			$partenaire = $partenaireRepository->findByNinea($values['partenaire']);
+			$compte->setUtilisateur($utilisateur);
+			$partenaire = $partenaireRepository->findByninea($values['partenaire']);
 			if ($partenaire == NULL || $partenaire[0] == NULL) {
 				return $this->json([
 					'code' => 300,
-					'Description' => 'Il faut un partenaire pour ce compte ou ce partenaire n\'existe pas'
+					'Description' => 'Vous devez indiquer un Partenaire'
 				]);
 			}
 			$compte->setPartenaire($partenaire[0]);
+
 			$connect->persist($compte);
 			$connect->flush();
 			return $this->json([
 				'code' => 200,
-				'message' => 'Nouveau Compte Ajouté'
+				'message' => 'Un nouveau Compte a été ajouté pour le partenaire'
 			]);
 		}
 		return $this->handleView($this->view($validator->validate($form)));
@@ -137,29 +144,23 @@ class XalissController extends AbstractController
 	//==========================>FIN AJOUT COMPTE POUR UN PARTENAIRE=================================
 
 
-	//==========================>ENVOIE D'ARGENT================================
+	//==========================>ENVOIE D'ARGENT=====================================================
 
 	/**
-	 * @Route("/envoi", name="envoi",methods={"POST"})
+	 * @Route("/Envoi", name="envoi",methods={"POST"})
 	 */
 	public function envoi(Request $request, ObjectManager $em)
 	{
-
 		$envoi = new Envoi();
-
 		$form  = $this->createForm(EnvoiType::class, $envoi);
-
-
-		$data = $request->request->all();
+		$data  = $request->request->all();
 		$form->submit($data);
 		if ($form->isSubmitted() && $form->isValid()) {
-
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($envoi);
 			$em->flush();
 			return new Response("la personne a été bien enregistré1");
 		}
-
 		return new Response("le depot est effectue avec success2");
 	}
 
@@ -182,7 +183,7 @@ class XalissController extends AbstractController
 			return new Response("la personne a été bien enregistré");
 		}
 
-		return new Response("le depot est effectue avec success");
+		return new Response("le depot est effectue avec success1");
 	}
 
 
@@ -193,14 +194,10 @@ class XalissController extends AbstractController
 	{
 
 		$retrait = new Retrait();
-
 		$form  = $this->createForm(RetraitType::class, $retrait);
-
-
 		$data = $request->request->all();
 		$form->submit($data);
 		if ($form->isSubmitted() && $form->isValid()) {
-
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($retrait);
 			$em->flush();
@@ -262,5 +259,39 @@ class XalissController extends AbstractController
 		}
 		$entityManager->flush();
 		return new JsonResponse($data);
+	}
+
+	//CETTE METHODE ME PERTMET DE FAIRE UN DEPO
+	/**
+	 * @Route("/depot", name="depot", methods={"POST"})
+	 */
+	public function ajouter_depot(Request $request)
+	{
+		$values = json_decode($request->getContent());
+		$entityManager = $this->getDoctrine()->getManager();
+		$utilisateurRepo = $this->getDoctrine()->getRepository(Utilisateur::class);
+		$utilisateur = $utilisateurRepo->find($values->utilisateur);
+		$compteRepo = $this->getDoctrine()->getRepository(Compte::class)->find($values->compte);
+
+		$depot = new Depot();
+		$depot->setUtilisateur($utilisateur);
+		$depot->setMontant($values->montant);
+		$depot->setDateDepot(new \DateTime);
+		$depot->setCompte($compteRepo->setSolde($compteRepo->getSolde() + $values->montant));
+		if ($values->montant < 75000) {
+			return new response("la somme doit etres au minimum 75000");
+		} else {
+			$entityManager->persist($depot);
+			$entityManager->flush();
+			return new Response("le depot est effectue avec success");
+		}
+	}
+
+	/**
+	 * Get the value of utilisateur
+	 */
+	public function getUtilisateur()
+	{
+		return $this->utilisateur;
 	}
 }
